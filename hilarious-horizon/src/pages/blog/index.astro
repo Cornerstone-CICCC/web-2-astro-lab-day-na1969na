@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+const blogPosts = await getCollection('blog');
+---
+
+<Layout title="Blog">
+  <h1>Blog</h1>
+  <ul class="blog-list">
+    {blogPosts.map(post => (
+      <li class="blog-item">
+        <h2>{post.data.title}</h2>
+        <a href={`/blog/${post.id}`}>Read More</a>
+      </li>
+    ))}
+  </ul>
+</Layout>
+
+<style>
+  .blog-list {
+    list-style: none;
+    padding: 0;
+  }
+  .blog-item {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: box-shadow 0.3s ease;
+  }
+  .blog-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  .blog-item h2 {
+    margin: 0 0 0.5rem;
+  }
+  .blog-item a {
+    color: #007acc;
+    text-decoration: none;
+  }
+  .blog-item a:hover {
+    text-decoration: underline;
+  }
+</style>

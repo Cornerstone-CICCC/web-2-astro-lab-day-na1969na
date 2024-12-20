@@ -1,0 +1,42 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const blog = await getCollection("blog");
+  return blog.map((item) => ({
+    params: { id: item.id },
+  }));
+}
+
+const { id } = Astro.params;
+const blog = await getEntry("blog", id);
+if (!blog) {
+  throw new Error(`Project with id ${id} not found`);
+}
+---
+
+<Layout title={blog.data.title}>
+  <h1>{blog.data.title}</h1>
+  <p>Written by: {blog.data.author}</p>
+  <article>
+    {blog.body}
+  </article>
+</Layout>
+
+<style>
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  p {
+    font-size: 1rem;
+    color: #555;
+  }
+  article {
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+</style>

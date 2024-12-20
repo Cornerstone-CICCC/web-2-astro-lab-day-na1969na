@@ -1,0 +1,42 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((project) => ({
+    params: { id: project.id },
+  }));
+}
+
+const { id } = Astro.params;
+const project = await getEntry("projects", id);
+if (!project) {
+  throw new Error(`Project with id ${id} not found`);
+}
+---
+
+<Layout title={project.data.title}>
+  <h1>{project.data.title}</h1>
+  <p>Developed by: {project.data.author}</p>
+  <article>
+    {project.body}
+  </article>
+</Layout>
+
+<style>
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  p {
+    font-size: 1rem;
+    color: #555;
+  }
+  article {
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+</style>
